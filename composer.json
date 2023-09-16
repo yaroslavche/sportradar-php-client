@@ -1,0 +1,55 @@
+{
+    "name": "yaroslavche/sportradar-php-client",
+    "description": "SportRadar PHP client",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "yaroslavche",
+            "email": "yaroslav429@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "symfony/http-client": "^6.3"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*",
+        "infection/infection": "*",
+        "phpstan/phpstan": "*",
+        "phpstan/phpstan-strict-rules": "*",
+        "squizlabs/php_codesniffer": "*",
+        "phpcompatibility/php-compatibility": "*",
+        "roave/security-advisories": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "SR\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "SR\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "phpcs": "XDEBUG_MODE=off phpcs --standard=./phpcs.xml.dist",
+        "phpcbf": "XDEBUG_MODE=off phpcbf --standard=./phpcs.xml.dist",
+        "phpstan": "XDEBUG_MODE=off phpstan analyse src/ -c ./phpstan.neon --level=9 --no-progress -vv --memory-limit=-1",
+        "phpunit": "phpunit",
+        "coverage": "XDEBUG_MODE=coverage phpunit --coverage-text --coverage-html ./var/coverage/html --coverage-clover ./var/coverage/clover.xml",
+        "infection": "XDEBUG_MODE=coverage infection --min-msi=100 --min-covered-msi=100 --log-verbosity=all",
+        "bccheck": "XDEBUG_MODE=off roave-backward-compatibility-check",
+        "ci:pack": [
+            "@phpcs", "@phpstan", "@phpunit"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "infection/extension-installer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}
