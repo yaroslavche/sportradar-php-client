@@ -19,8 +19,7 @@
         "phpstan/phpstan": "*",
         "phpstan/phpstan-strict-rules": "*",
         "squizlabs/php_codesniffer": "*",
-        "phpcompatibility/php-compatibility": "*",
-        "roave/security-advisories": "*"
+        "phpcompatibility/php-compatibility": "*"
     },
     "autoload": {
         "psr-4": {
