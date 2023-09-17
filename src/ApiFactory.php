@@ -6,11 +6,13 @@ namespace SR;
 
 use Exception;
 use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Contracts\Cache\CacheInterface;
 
 final class ApiFactory
 {
     public function __construct(
         private readonly string $apiKey,
+        private readonly ?CacheInterface $cache = null,
     ) {
     }
 
@@ -39,6 +41,7 @@ final class ApiFactory
         $apiClient = new $apiClientFQCN(
             httpClient: HttpClient::create(),
             apiClientConfig: $apiClientConfig ?? new ApiClientConfig(apiKey: $this->apiKey),
+            cache: $this->cache,
         );
         return $apiClient;
     }
