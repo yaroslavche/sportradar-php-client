@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace SR;
+namespace SR\Formula1;
 
+use SR\AbstractApiClient;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 final class Formula1V2ApiClient extends AbstractApiClient implements Formula1ApiClientInterface

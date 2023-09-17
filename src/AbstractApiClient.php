@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace SR;
 
 use Psr\Cache\InvalidArgumentException;
+use SR\Exception\CacheException;
+use SR\Exception\HttpClientException;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -20,24 +22,37 @@ abstract class AbstractApiClient implements ApiClientInterface
     ) {
     }
 
+    public function getConfig(): ApiClientConfigInterface
+    {
+        return $this->apiClientConfig;
+    }
+
     /**
-     * @throws InvalidArgumentException
-     * @throws TransportExceptionInterface
+     * @throws HttpClientException
+     * @throws CacheException
      */
     protected function request(string $request, ?int $time = null): ResponseInterface
     {
         if (null === $this->cache) {
-            return $this->getResponse($request);
-        }
-        return $this->cache->get(
-            md5($request),
-            function (ItemInterface $item) use ($request, $time): ResponseInterface {
-                if (is_int($time)) {
-                    $item->expiresAfter($time);
-                }
+            try {
                 return $this->getResponse($request);
+            } catch (TransportExceptionInterface $exception) {
+                throw new HttpClientException($exception->getMessage(), $exception->getCode(), $exception);
             }
-        );
+        }
+        try {
+            return $this->cache->get(
+                md5($request),
+                function (ItemInterface $item) use ($request, $time): ResponseInterface {
+                    if (is_int($time)) {
+                        $item->expiresAfter($time);
+                    }
+                    return $this->getResponse($request);
+                }
+            );
+        } catch (InvalidArgumentException $exception) {
+            throw new CacheException($exception->getMessage(), $exception->getCode(), $exception);
+        }
     }
 
     /** @throws TransportExceptionInterface */

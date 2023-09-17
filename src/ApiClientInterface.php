@@ -7,4 +7,6 @@ namespace SR;
 interface ApiClientInterface
 {
     public const SERVICE = null;
+
+    public function getConfig(): ApiClientConfigInterface;
 }
