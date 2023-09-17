@@ -11,12 +11,7 @@ abstract class AbstractApiClient implements ApiClientInterface
 {
     final public function __construct(
         private readonly HttpClientInterface $httpClient,
-        private readonly string $apiKey,
-        private readonly string $baseUrl = 'https://api.sportradar.com',
-        private readonly string $accessLevel = 'trial',
-        private readonly string $languageCode = 'en',
-        private readonly string $version = 'v1',
-        private readonly string $format = 'json',
+        private readonly ApiClientConfigInterface $apiClientConfig,
     ) {
     }
 
@@ -24,14 +19,14 @@ abstract class AbstractApiClient implements ApiClientInterface
     {
         $url = sprintf(
             '%s/%s/%s/%s/%s/%s.%s?api_key=%s',
-            $this->baseUrl,
+            $this->apiClientConfig->getBaseUrl(),
             static::SERVICE,
-            $this->accessLevel,
-            $this->version,
-            $this->languageCode,
+            $this->apiClientConfig->getAccessLevel(),
+            $this->apiClientConfig->getVersion(),
+            $this->apiClientConfig->getLanguageCode(),
             $request,
-            $this->format,
-            $this->apiKey,
+            $this->apiClientConfig->getFormat(),
+            $this->apiClientConfig->getApiKey(),
         );
         return $this->httpClient->request('GET', $url);
     }

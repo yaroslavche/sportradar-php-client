@@ -32,19 +32,16 @@ final class Formula1V2ApiClient extends AbstractApiClient implements Formula1Api
 
     public function stageProbabilities(string $stageId): ResponseInterface
     {
-        $stageId = 'sr:stage:1031201';
         return $this->request(sprintf('sport_events/%s/probabilities', $stageId));
     }
 
     public function stageSchedule(string $stageId): ResponseInterface
     {
-        $stageId = 'sr:stage:1031201';
         return $this->request(sprintf('sport_events/%s/schedule', $stageId));
     }
 
     public function stageSummary(string $stageId): ResponseInterface
     {
-        $stageId = 'sr:stage:1031201';
         return $this->request(sprintf('sport_events/%s/summary', $stageId));
     }
 }
