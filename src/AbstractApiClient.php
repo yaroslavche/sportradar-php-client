@@ -32,7 +32,9 @@ abstract class AbstractApiClient implements ApiClientInterface
         return $this->cache->get(
             md5($request),
             function (ItemInterface $item) use ($request, $time): ResponseInterface {
-                is_int($time) && $item->expiresAfter($time);
+                if (is_int($time)) {
+                    $item->expiresAfter($time);
+                }
                 return $this->getResponse($request);
             }
         );

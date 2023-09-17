@@ -24,8 +24,6 @@ jobs:
                     php-version: ${{ matrix.php-versions }}
                     coverage: xdebug
                     tools: composer
-            -   name: Validate composer.json and composer.lock
-                run: composer validate --strict
             -   name: Cache dependencies
                 id: cache-composer
                 uses: actions/cache@v3
@@ -39,10 +37,10 @@ jobs:
                         ${{ runner.os }}-build-
                         ${{ runner.os }}-
 
-            -   if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
-                name: Composer info
+            -   if: ${{ steps.cache-composer.outputs.cache-hit != 'true' }}
+                name: Validate composer.json
                 continue-on-error: true
-                run: composer info
+                run: composer validate --strict
             -   name: Install dependencies
                 run: composer install --prefer-source
             -   name: Checks
