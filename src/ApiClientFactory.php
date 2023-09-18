@@ -27,10 +27,9 @@ final class ApiClientFactory
     {
         /** @var Formula1ApiClientInterface $apiClient */
         $apiClient = match ($version) {
-            'v1' => throw new NotImplementedException(),
             'v2' => $this->create(
                 apiClientFQCN: Formula1V2ApiClient::class,
-                apiClientConfig: new ApiClientConfig(apiKey: $this->apiKey, version: 'v2'),
+                apiClientConfig: new ApiClientConfig(apiKey: $this->apiKey, version: $version),
             ),
             default => throw new NotImplementedException(sprintf(
                 '%s: %s',
