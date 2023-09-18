@@ -33,25 +33,22 @@ abstract class AbstractApiClient implements ApiClientInterface
      */
     protected function request(string $request, ?int $time = null): ResponseInterface
     {
-        if (null === $this->cache) {
-            try {
-                return $this->getResponse($request);
-            } catch (TransportExceptionInterface $exception) {
-                throw new HttpClientException($exception->getMessage(), $exception->getCode(), $exception);
-            }
-        }
         try {
-            return $this->cache->get(
-                md5($request),
-                function (ItemInterface $item) use ($request, $time): ResponseInterface {
-                    if (is_int($time)) {
-                        $item->expiresAfter($time);
+            return null === $this->cache ?
+                $this->getResponse($request) :
+                $this->cache->get(
+                    md5($request),
+                    function (ItemInterface $item) use ($request, $time): ResponseInterface {
+                        if (is_int($time)) {
+                            $item->expiresAfter($time);
+                        }
+                        return $this->getResponse($request);
                     }
-                    return $this->getResponse($request);
-                }
-            );
+                );
         } catch (InvalidArgumentException $exception) {
             throw new CacheException($exception->getMessage(), $exception->getCode(), $exception);
+        } catch (TransportExceptionInterface $exception) {
+            throw new HttpClientException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
